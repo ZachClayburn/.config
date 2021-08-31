@@ -1,5 +1,5 @@
 -- Bootstrap Packer
-local fn = vim .fn
+local fn = vim.fn
 local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
   fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
@@ -51,7 +51,6 @@ local f =  require'packer'.startup(function(use)
         sign_priority = 6,
         update_debounce = 100,
         status_formatter = nil, -- Use default
-        use_decoration_api = true,
         use_internal_diff = true,  -- If luajit is present
       }
     end
@@ -85,8 +84,10 @@ local f =  require'packer'.startup(function(use)
       require('lualine').setup {
         options = {
           theme = 'tokyonight',
-          section_separators = {'', ''},
-          component_separators = {'', ''},
+          section_separators = {'', ''},
+          component_separators = {'', ''},
+          -- section_separators = {'', ''},
+          -- component_separators = {'', ''},
           -- section_separators = {' ', '  '},
           -- component_separators = {' ', ' '},
           icons_enabled = true,
@@ -130,9 +131,9 @@ local f =  require'packer'.startup(function(use)
 
   use { 'dense-analysis/ale',
     opt = false,
-    setup = function()
-      -- Called before plugin loaded
-    end,
+    -- setup = function()
+    --   -- Called before plugin loaded
+    -- end,
     config = function()
       -- Called after plugin loaded
       vim.g.ale_lua_luacheck_options = '--globals vim'
@@ -152,9 +153,27 @@ local f =  require'packer'.startup(function(use)
     config = function()
       vim.cmd[[let mapleader=" "]]
       local map = require('map')
-      map('n', '<Leader>nt', ':NERDTreeToggle<CR>', {silent = true})
-      map('n', '<C-f>', ':NERDTreeFind', {silent = true})
-      map('n', '<Leader>nf', ':NERDTreeFocus', {silent = true})
+      local opts = { noremap=true, silent=true }
+      map('n', '<Leader>nt', ':NERDTreeToggle<CR>', opts)
+      map('n', '<Leader>nf', ':NERDTreeFocus<CR>', opts)
+      map('n', '<Leader>nr', ':NERDTreeRefreshRoot<CR>', opts)
+      map('n', '<Leader>nc', ':NERDTreeCWD<CR>', opts)
+      map('n', '<C-f>', ':NERDTreeFind<CR>', opts)
+
+      -- Exit Vim if NERDTree is the only window remaining in the only tab.
+      vim.api.nvim_command([[
+      autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+      ]])
+      -- Close the tab if NERDTree is the only window remaining in it.
+      vim.api.nvim_command([[
+      autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+      ]])
+      -- Start NERDTree when Vim starts with a directory argument.
+      vim.api.nvim_command([[
+      autocmd StdinReadPre * let s:std_in=1
+      autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
+          \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
+      ]])
     end
   }
 
@@ -213,15 +232,39 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'nvim-telescope/telescope.nvim',
-    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
+    requires = {
+      {'nvim-lua/popup.nvim'},
+      {'nvim-lua/plenary.nvim'},
+      {'nvim-telescope/telescope-project.nvim'}
+    },
     config = function()
       vim.cmd[[let mapleader=" "]]
       local map = require('map')
-      map('n', '<Leader>ff', [[<cmd>lua require('telescope.builtin').find_files()<cr>]], {silent = true})
-      map('n', '<Leader>fb', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], {silent = true})
-      map('n', '<Leader>fh', [[<cmd>lua require('telescope.builtin').help_tags()<cr>]], {silent = true})
+      local mapOpts = {silent=true, noremap=true}
+      local telescope = require('telescope')
+      map('n', '<Leader>ff', [[<cmd>lua require('telescope.builtin').find_files()<cr>]], mapOpts)
+      map('n', '<Leader>fb', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], mapOpts)
+      map('n', '<Leader>fh', [[<cmd>lua require('telescope.builtin').help_tags()<cr>]], mapOpts)
+      telescope.load_extension('project')
+      map('n', '<Leader>fp', [[<cmd>lua require'telescope'.extensions.project.project{}<cr>]], mapOpts)
     end
   }
+
+  use { 'nvim-telescope/telescope-project.nvim',
+    requires = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require'telescope'.load_extension('project')
+    end
+  }
+
+  use { 'karb94/neoscroll.nvim',
+    config = function()
+      require('neoscroll').setup()
+    end
+  }
+
+  use 'junegunn/vim-easy-align'
+
 end)
 
 return f
