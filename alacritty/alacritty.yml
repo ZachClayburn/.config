@@ -7,8 +7,8 @@ window:
   dynamic_title: true
 font:
   normal:
-    family: "JetBrainsMono Nerd Font"
-  size: 15
+    family: "JetBrainsMono Nerd Font mono"
+  size: 11
 bell:
   animation: EaseOutSine
   duration: 100
