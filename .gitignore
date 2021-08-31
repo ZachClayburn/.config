@@ -2,4 +2,5 @@
 !nvim/
 !alacritty/
 !bat/
+!delta-configs.inc
 !.gitignore
