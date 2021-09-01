@@ -3,12 +3,11 @@ local fn = vim.fn
 local g = vim.g
 require'plugins'
 
-local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
+local scopes = {g = vim.o, b = vim.bo, w = vim.wo}
 
 local function opt(scope, key, value)
-  if scope == 'g' then scope = 'o' end
   scopes[scope][key] = value
-  if scope ~= 'o' then scopes['o'][key] = value end
+  if scope ~= 'g' then scopes['g'][key] = value end
 end
 
 local indent = 4
@@ -26,6 +25,7 @@ opt('w', 'list', true)
 opt('g', 'listchars', 'eol:,tab:→ ,trail:,extends:ﲖ,precedes:ﲕ')
 opt('g', 'showbreak', '↪ ')
 opt('g', 'wrap', false)
+opt('g', 'undofile', true)
 
 local map = require('map')
 cmd[[let mapleader=" "]]
