@@ -4,3 +4,6 @@
 !bat/
 !delta-configs.inc
 !.gitignore
+!gh/
+!lsd/
+
