@@ -231,6 +231,16 @@ local f =  require'packer'.startup(function(use)
     end
   }
 
+  use { 'nvim-lua/completion-nvim',
+    requires = {
+      { 'neovim/nvim-lspconfig' }
+    },
+    config = function()
+      -- TODO Add extra completion sources and configure everything
+      vim.cmd[[autocmd BufEnter * lua require'completion'.on_attach()]]
+    end
+  }
+
   use { 'nvim-telescope/telescope.nvim',
     requires = {
       {'nvim-lua/popup.nvim'},
