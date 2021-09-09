@@ -238,6 +238,8 @@ local f =  require'packer'.startup(function(use)
     config = function()
       -- TODO Add extra completion sources and configure everything
       vim.cmd[[autocmd BufEnter * lua require'completion'.on_attach()]]
+      local opt = require('opt')
+      opt('g', 'completeopt', 'menuone,noinsert,noselect')
     end
   }
 

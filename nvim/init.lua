@@ -3,12 +3,7 @@ local fn = vim.fn
 local g = vim.g
 require'plugins'
 
-local scopes = {g = vim.o, b = vim.bo, w = vim.wo}
-
-local function opt(scope, key, value)
-  scopes[scope][key] = value
-  if scope ~= 'g' then scopes['g'][key] = value end
-end
+local opt = require('opt')
 
 local indent = 4
 opt('b', 'expandtab', true)
@@ -45,7 +40,12 @@ map('t',  '<A-l>', '<C-\\><C-N><C-w>l')
 
 g.python3_host_prog = '/usr/bin/python3'
 
-cmd[[autocmd BufWritePost plugins.lua PackerCompile]]
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]])
 
 -- gui/neovide settings
 opt('g', 'guifont', 'JetBrainsMono Nerd Font' )
