@@ -187,8 +187,6 @@ local f =  require'packer'.startup(function(use)
 
   use 'tpope/vim-surround'
 
-  use 'fhill2/floating.nvim'
-
   use 'jeffkreeftmeijer/vim-numbertoggle'
 
   use 'sheerun/vim-polyglot'
