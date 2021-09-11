@@ -213,6 +213,9 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'neovim/nvim-lspconfig',
+    requires = {
+      { 'hrsh7th/cmp-nvim-lsp' }
+    },
     config = function()
       local nvim_lsp = require('lspconfig')
 
@@ -226,22 +229,45 @@ local f =  require'packer'.startup(function(use)
         -- TODO Add more keymaps. Find keymaps with :h vim.lsp
       end
 
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
       local servers = { 'clangd', 'cmake' }
       for _, lsp in ipairs(servers) do
-        nvim_lsp[lsp].setup { on_attach = on_attach }
+        nvim_lsp[lsp].setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+        }
       end
     end
   }
 
-  use { 'nvim-lua/completion-nvim',
+  use { 'hrsh7th/nvim-cmp',
     requires = {
-      { 'neovim/nvim-lspconfig' }
+      { 'hrsh7th/cmp-nvim-lsp' },
+      { 'hrsh7th/cmp-nvim-lua' },
+      { 'hrsh7th/vim-vsnip' },
+      { 'hrsh7th/cmp-buffer' },
+      { 'windwp/nvim-autopairs' },
     },
     config = function()
-      -- TODO Add extra completion sources and configure everything
-      vim.cmd[[autocmd BufEnter * lua require'completion'.on_attach()]]
-      local opt = require('opt')
-      opt('g', 'completeopt', 'menuone,noinsert,noselect')
+      local cmp = require('cmp')
+      cmp.setup {
+        snippet = {
+          expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+          end,
+        },
+        sources = {
+          { name = 'nvim_lsp' },
+          { name = 'nvim_lua' },
+          { name = 'buffer'}
+        }
+      }
+      require('nvim-autopairs.completion.cmp').setup{
+        map_cr = true,
+        map_complete = true,
+        auto_select = true,
+      }
     end
   }
 
