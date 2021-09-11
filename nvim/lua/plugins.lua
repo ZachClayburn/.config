@@ -9,7 +9,6 @@ end
 local f =  require'packer'.startup(function(use)
   use 'wbthomason/packer.nvim'
 
-  --use 'airblade/vim-gitgutter'
   use { 'lewis6991/gitsigns.nvim',
     requires = {
       'nvim-lua/plenary.nvim'
@@ -51,7 +50,6 @@ local f =  require'packer'.startup(function(use)
         sign_priority = 6,
         update_debounce = 100,
         status_formatter = nil, -- Use default
-        use_internal_diff = true,  -- If luajit is present
       }
     end
   }
