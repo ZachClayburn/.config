@@ -298,6 +298,7 @@ local f =  require'packer'.startup(function(use)
   use { 'karb94/neoscroll.nvim',
     config = function()
       require('neoscroll').setup{
+        mappings = {},
         hide_cursor = true,
         stop_eof = true,
         use_local_scrolloff = false,
