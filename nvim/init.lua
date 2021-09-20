@@ -21,6 +21,8 @@ opt('g', 'listchars', 'eol:,tab:→ ,trail:,extends:ﲖ,precedes:ﲕ')
 opt('g', 'showbreak', '↪ ')
 opt('g', 'wrap', false)
 opt('g', 'undofile', true)
+opt('g', 'ignorecase', true)
+opt('g', 'smartcase', true)
 
 local map = require('map')
 cmd[[let mapleader=" "]]
