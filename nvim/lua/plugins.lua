@@ -144,6 +144,10 @@ local f =  require'packer'.startup(function(use)
       vim.g.ale_sign_error = 'ﮊ'
       vim.g.ale_sign_warning =''
       vim.g.ale_sign_info = ''
+
+      vim.g.ale_linters = {
+        rust = {'cargo'},
+      }
     end
   }
 
@@ -239,11 +243,32 @@ local f =  require'packer'.startup(function(use)
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
-      local servers = { 'clangd', 'cmake' }
+      local servers = {
+        { name = 'clangd', settings = {}, },
+        { name = 'cmake', settings = {}, },
+        {
+          name = 'rust_analyzer',
+          settings = {
+            ["rust-analyzer"] = {
+              assist = {
+                importGranularity = "module",
+                importPrefix = "by_self",
+              },
+              cargo = {
+                loadOutDirsFromCheck = true,
+              },
+              procMacro = {
+                enable = true,
+              }
+            }
+          },
+        },
+      }
       for _, lsp in ipairs(servers) do
-        nvim_lsp[lsp].setup {
+        nvim_lsp[lsp.name].setup {
           on_attach = on_attach,
           capabilities = capabilities,
+          settings = lsp.settings,
         }
       end
     end
@@ -334,6 +359,18 @@ local f =  require'packer'.startup(function(use)
 
   use 'junegunn/vim-easy-align'
 
+  use { 'simrat39/rust-tools.nvim',
+    requires = {
+      {'neovim/nvim-lspconfig'},
+      {'nvim-lua/popup.nvim'},
+      {'nvim-lua/plenary.nvim'},
+      {'nvim-telescope/telescope.nvim'},
+      {'mfussenegger/nvim-dap'}, -- TODO Create a Config for this plugin, it is really cool!
+    },
+    config = function()
+      require('rust-tools').setup{}
+    end
+  }
 end)
 
 return f
