@@ -5,11 +5,17 @@ if fn.empty(fn.glob(install_path)) > 0 then
   fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
+local function not_vscode()
+  return vim.g.vscode == nil
+end
+
 -- Add plugins
 local f =  require'packer'.startup(function(use)
   use 'wbthomason/packer.nvim'
 
   use { 'lewis6991/gitsigns.nvim',
+    opt = true,
+    cond = not_vscode,
     requires = {
       'nvim-lua/plenary.nvim'
     },
@@ -71,6 +77,8 @@ local f =  require'packer'.startup(function(use)
   }
 
   use{ 'folke/tokyonight.nvim',
+    opt = true,
+    cond = not_vscode,
     config = function()
       vim.g.tokyonight_style = 'storm'
       vim.g.tokyonight_italic_functions = true
@@ -81,7 +89,7 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'hoob3rt/lualine.nvim',
-    requires = { {'kyazdani42/nvim-web-devicons', opt = false}, {'ryanoasis/vim-devicons', opt = false} },
+    requires = { {'kyazdani42/nvim-web-devicons'}, {'ryanoasis/vim-devicons'} },
     config = function()
       require('lualine').setup {
         options = {
@@ -132,7 +140,8 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'dense-analysis/ale',
-    opt = false,
+    opt = true,
+    cond = not_vscode,
     -- setup = function()
     --   -- Called before plugin loaded
     -- end,
@@ -152,9 +161,11 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'preservim/nerdtree',
+    opt = true,
+    cond = not_vscode,
     requires = {
-      {'ryanoasis/vim-devicons', opt = false},
-      {'Xuyuanp/nerdtree-git-plugin', opt = false}
+      {'ryanoasis/vim-devicons'},
+      {'Xuyuanp/nerdtree-git-plugin'}
     },
     config = function()
       vim.cmd[[let mapleader=" "]]
@@ -183,31 +194,46 @@ local f =  require'packer'.startup(function(use)
     end
   }
 
-  use 'tpope/vim-fugitive'
+  use { 'tpope/vim-fugitive',
+    opt = true,
+    cond = not_vscode,
+  }
 
-  use 'tpope/vim-git'
+  use { 'tpope/vim-git',
+    opt = true,
+    cond = not_vscode,
+  }
 
   use 'tpope/vim-sensible'
 
   use 'tpope/vim-surround'
 
-  use 'jeffkreeftmeijer/vim-numbertoggle'
+  use { 'jeffkreeftmeijer/vim-numbertoggle',
+    opt = true,
+    cond = not_vscode,
+  }
 
-  use 'sheerun/vim-polyglot'
+  use { 'sheerun/vim-polyglot',
+    opt = true,
+    cond = not_vscode,
+  }
 
   use { 'lukas-reineke/indent-blankline.nvim',
+    opt = true,
+    cond = not_vscode,
     config = function()
       vim.g.indentLine_char = '│'
     end
   }
 
   use { 'nvim-treesitter/nvim-treesitter',
-    opt = false,
+    opt = true,
+    cond = not_vscode,
     run = ':TSUpdate',
     config = function()
       require'nvim-treesitter.configs'.setup {
         ensure_installed = "maintained",
-        highlight = { enabled = true },
+        highlight = { enabled = vim.g.vscode == nil },
         incremental_selection = { enabled = true },
         indent = { enabled = true }
       }
@@ -215,6 +241,8 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'neovim/nvim-lspconfig',
+    opt = true,
+    cond = not_vscode,
     requires = {
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'nvim-telescope/telescope.nvim' },
@@ -246,8 +274,8 @@ local f =  require'packer'.startup(function(use)
       local servers = {
         { name = 'clangd', settings = {}, },
         { name = 'cmake', settings = {}, },
-        {
-          name = 'rust_analyzer',
+        { name = 'pylsp', settings = {}, },
+        { name = 'rust_analyzer',
           settings = {
             ["rust-analyzer"] = {
               assist = {
@@ -275,6 +303,8 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'hrsh7th/nvim-cmp',
+    opt = true,
+    cond = not_vscode,
     requires = {
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'hrsh7th/cmp-nvim-lua' },
@@ -305,6 +335,8 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'nvim-telescope/telescope.nvim',
+    opt = true,
+    cond = not_vscode,
     requires = {
       {'nvim-lua/popup.nvim'},
       {'nvim-lua/plenary.nvim'},
