@@ -80,55 +80,15 @@ local f =  require'packer'.startup(function(use)
     end
   }
 
-  use { 'hoob3rt/lualine.nvim',
-    requires = { {'kyazdani42/nvim-web-devicons'}, {'ryanoasis/vim-devicons'} },
+  use { 'NTBBloodbath/galaxyline.nvim',
+    requires = { "kyazdani42/nvim-web-devicons", opt = true },
     config = function()
-      require('lualine').setup {
-        options = {
-          theme = 'tokyonight',
-          section_separators = {'', ''},
-          component_separators = {'', ''},
-          -- section_separators = {'', ''},
-          -- component_separators = {'', ''},
-          -- section_separators = {' ', '  '},
-          -- component_separators = {' ', ' '},
-          icons_enabled = true,
-        },
-        sections = {
-        lualine_a = { {'mode', upper = true} },
-        lualine_b = { {'branch', icon = ''} },
-        lualine_c = { {'filename', file_status = true, symbols = {modified = '  ', readonly = '  ' }} },
-        lualine_x = { {
-            'diagnostics',
-            sources = { 'ale', 'nvim_lsp' },
-            symbols = {
-              error = ' ﮊ ',
-              warn =  ' ﮻ ',
-              info = '  '
-            }
-          } },
-        lualine_y = { 'progress' },
-        lualine_z = { 'location'  },
-      },
-      inactive_sections = {
-        lualine_a = {  },
-        lualine_b = {  },
-        lualine_c = { 'filename' },
-        lualine_x = { 'location' },
-        lualine_y = {  },
-        lualine_z = {   }
-      },
-      tabline = {
-        lualine_a = {  },
-        lualine_b = {  },
-        lualine_c = { 'filename' },
-        lualine_x = { 'location' },
-        lualine_y = {  },
-        lualine_z = {   }
-      },
-      extensions = { 'fugitive', 'nerdtree' }
-      }
-    end
+      require'galaxyline.themes.eviline'
+    end,
+  }
+
+  use { 'romgrk/barbar.nvim',
+    requires = {'kyazdani42/nvim-web-devicons'}
   }
 
   use { 'dense-analysis/ale',
