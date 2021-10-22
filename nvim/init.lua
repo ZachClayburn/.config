@@ -3,6 +3,8 @@ local fn = vim.fn
 local g = vim.g
 require'plugins'
 
+cmd "colorscheme tokyonight"
+
 local opt = require('opt')
 
 local indent = 4
@@ -42,7 +44,7 @@ map('t',  '<A-l>', '<C-\\><C-N><C-w>l')
 
 g.python3_host_prog = '/usr/bin/python3'
 
-vim.cmd([[
+cmd([[
   augroup packer_user_config
     autocmd!
     autocmd BufWritePost plugins.lua source <afile> | PackerCompile

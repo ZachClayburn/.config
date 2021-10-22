@@ -5,17 +5,11 @@ if fn.empty(fn.glob(install_path)) > 0 then
   fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
-local function not_vscode()
-  return vim.g.vscode == nil
-end
-
 -- Add plugins
 local f =  require'packer'.startup(function(use)
   use 'wbthomason/packer.nvim'
 
   use { 'lewis6991/gitsigns.nvim',
-    opt = true,
-    cond = not_vscode,
     requires = {
       'nvim-lua/plenary.nvim'
     },
@@ -77,8 +71,6 @@ local f =  require'packer'.startup(function(use)
   }
 
   use{ 'folke/tokyonight.nvim',
-    opt = true,
-    cond = not_vscode,
     config = function()
       vim.g.tokyonight_style = 'storm'
       vim.g.tokyonight_italic_functions = true
@@ -140,8 +132,6 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'dense-analysis/ale',
-    opt = true,
-    cond = not_vscode,
     -- setup = function()
     --   -- Called before plugin loaded
     -- end,
@@ -161,8 +151,6 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'preservim/nerdtree',
-    opt = true,
-    cond = not_vscode,
     requires = {
       {'ryanoasis/vim-devicons'},
       {'Xuyuanp/nerdtree-git-plugin'}
@@ -194,41 +182,25 @@ local f =  require'packer'.startup(function(use)
     end
   }
 
-  use { 'tpope/vim-fugitive',
-    opt = true,
-    cond = not_vscode,
-  }
+  use { 'tpope/vim-fugitive' }
 
-  use { 'tpope/vim-git',
-    opt = true,
-    cond = not_vscode,
-  }
+  use { 'tpope/vim-git' }
 
   use 'tpope/vim-sensible'
 
   use 'tpope/vim-surround'
 
-  use { 'jeffkreeftmeijer/vim-numbertoggle',
-    opt = true,
-    cond = not_vscode,
-  }
+  use { 'jeffkreeftmeijer/vim-numbertoggle' }
 
-  use { 'sheerun/vim-polyglot',
-    opt = true,
-    cond = not_vscode,
-  }
+  use { 'sheerun/vim-polyglot' }
 
   use { 'lukas-reineke/indent-blankline.nvim',
-    opt = true,
-    cond = not_vscode,
     config = function()
       vim.g.indentLine_char = '│'
     end
   }
 
   use { 'nvim-treesitter/nvim-treesitter',
-    opt = true,
-    cond = not_vscode,
     run = ':TSUpdate',
     config = function()
       require'nvim-treesitter.configs'.setup {
@@ -241,8 +213,6 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'neovim/nvim-lspconfig',
-    opt = true,
-    cond = not_vscode,
     requires = {
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'nvim-telescope/telescope.nvim' },
@@ -303,8 +273,6 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'hrsh7th/nvim-cmp',
-    opt = true,
-    cond = not_vscode,
     requires = {
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'hrsh7th/cmp-nvim-lua' },
@@ -335,8 +303,6 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'nvim-telescope/telescope.nvim',
-    opt = true,
-    cond = not_vscode,
     requires = {
       {'nvim-lua/popup.nvim'},
       {'nvim-lua/plenary.nvim'},
@@ -354,13 +320,6 @@ local f =  require'packer'.startup(function(use)
       map('n', '<Leader>fw', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>]], mapOpts)
       telescope.load_extension('project')
       map('n', '<Leader>fp', [[<cmd>lua require'telescope'.extensions.project.project{}<cr>]], mapOpts)
-    end
-  }
-
-  use { 'nvim-telescope/telescope-project.nvim',
-    requires = { 'nvim-telescope/telescope.nvim' },
-    config = function()
-      require'telescope'.load_extension('project')
     end
   }
 
