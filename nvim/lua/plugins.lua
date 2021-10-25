@@ -189,8 +189,7 @@ local f =  require'packer'.startup(function(use)
         -- TODO Add more keymaps. Find keymaps with :h vim.lsp
       end
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+      local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
       local servers = {
         { name = 'clangd', settings = {}, },
         { name = 'cmake', settings = {}, },
@@ -224,11 +223,13 @@ local f =  require'packer'.startup(function(use)
 
   use { 'hrsh7th/nvim-cmp',
     requires = {
+      { 'hrsh7th/vim-vsnip' },
+      { 'hrsh7th/cmp-vsnip' },
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'hrsh7th/cmp-nvim-lua' },
-      { 'hrsh7th/vim-vsnip' },
       { 'hrsh7th/cmp-buffer' },
       { 'windwp/nvim-autopairs' },
+      { 'Saecki/crates.nvim' },
     },
     config = function()
       local cmp = require('cmp')
@@ -238,10 +239,23 @@ local f =  require'packer'.startup(function(use)
             vim.fn["vsnip#anonymous"](args.body)
           end,
         },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'nvim_lua' },
-          { name = 'buffer'}
+        mapping = {
+          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<C-e>'] = cmp.mapping.close(),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        },
+        sources = cmp.config.sources({
+            { name = 'nvim_lsp' },
+            { name = 'vsnip' },
+          }, {
+            { name = 'nvim_lua' },
+            { name = 'crates' },
+            { name = 'buffer' },
+          }),
+        documentation = {
+          border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
         }
       }
       require('nvim-autopairs.completion.cmp').setup{
@@ -311,6 +325,12 @@ local f =  require'packer'.startup(function(use)
     config = function()
       require('rust-tools').setup{}
     end
+  }
+
+  use { 'Saecki/crates.nvim',
+    requires = {
+      { 'nvim-lua/plenary.nvim' },
+    }
   }
 
   -- Color schemes
