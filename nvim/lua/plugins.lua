@@ -169,6 +169,7 @@ local f =  require'packer'.startup(function(use)
     requires = {
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'nvim-telescope/telescope.nvim' },
+      { 'simrat39/rust-tools.nvim' },
     },
     config = function()
       local nvim_lsp = require('lspconfig')
@@ -187,8 +188,8 @@ local f =  require'packer'.startup(function(use)
       local on_attach = function(client, bufnr)
         local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 
-        vim.lsp.handlers["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border})
-        vim.lsp.handlers["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border})
+        vim.lsp.handlers["textDocument/hover"]= vim.lsp.with(vim.lsp.handlers.hover, {border = border})
+        vim.lsp.handlers["textDocument/signatureHelp"]= vim.lsp.with(vim.lsp.handlers.signature_help, {border = border})
 
         local opts = { noremap=true, silent=true }
         vim.cmd[[let mapleader=" "]]
@@ -211,22 +212,6 @@ local f =  require'packer'.startup(function(use)
         { name = 'clangd', settings = {}, },
         { name = 'cmake', settings = {}, },
         { name = 'pylsp', settings = {}, },
-        { name = 'rust_analyzer',
-          settings = {
-            ["rust-analyzer"] = {
-              assist = {
-                importGranularity = "module",
-                importPrefix = "by_self",
-              },
-              cargo = {
-                loadOutDirsFromCheck = true,
-              },
-              procMacro = {
-                enable = true,
-              }
-            }
-          },
-        },
       }
       for _, lsp in ipairs(servers) do
         nvim_lsp[lsp.name].setup {
@@ -235,6 +220,14 @@ local f =  require'packer'.startup(function(use)
           settings = lsp.settings,
         }
       end
+      -- My rust-tools config & setup have to be here to allow me to reuse my on_attach easing_function
+      -- Not ideal, but oh well
+      local rust_tools_opts = {
+        server = {
+          on_attach = on_attach
+        }
+      }
+      require('rust-tools').setup(rust_tools_opts)
     end
   }
 
@@ -335,7 +328,6 @@ local f =  require'packer'.startup(function(use)
       {'mfussenegger/nvim-dap'}, -- TODO Create a Config for this plugin, it is really cool!
     },
     config = function()
-      require('rust-tools').setup{}
     end
   }
 
