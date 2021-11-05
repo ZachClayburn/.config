@@ -77,8 +77,11 @@ local f =  require'packer'.startup(function(use)
     end,
   }
 
-  use { 'romgrk/barbar.nvim',
-    requires = {'kyazdani42/nvim-web-devicons'}
+  use { 'alvarosevilla95/luatab.nvim',
+    requires = {'kyazdani42/nvim-web-devicons'},
+    config = function()
+      vim.o.tabline = '%!v:lua.require\'luatab\'.tabline()'
+    end
   }
 
   use { 'dense-analysis/ale',
