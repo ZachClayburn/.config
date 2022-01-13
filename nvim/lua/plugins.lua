@@ -80,7 +80,7 @@ local f =  require'packer'.startup(function(use)
   use { 'alvarosevilla95/luatab.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
     config = function()
-      vim.o.tabline = '%!v:lua.require\'luatab\'.tabline()'
+      require('luatab').setup({})
     end
   }
 
