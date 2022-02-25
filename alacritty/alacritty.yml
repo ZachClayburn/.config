@@ -5,6 +5,7 @@ window:
   dynamic_padding: true
   decorations: none
   dynamic_title: true
+  opacity: 1.0
 font:
   normal:
     family: "JetBrainsMono Nerd Font mono"
@@ -12,7 +13,6 @@ font:
 bell:
   animation: EaseOutSine
   duration: 100
-background_opacity: 1.0
 
 cursor:
   style: Underline
