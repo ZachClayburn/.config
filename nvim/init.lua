@@ -3,8 +3,6 @@ local fn = vim.fn
 local g = vim.g
 require'plugins'
 
-cmd "colorscheme tokyonight"
-
 local opt = require('opt')
 
 local indent = 4

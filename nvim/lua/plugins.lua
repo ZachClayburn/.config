@@ -369,7 +369,7 @@ local f =  require'packer'.startup(function(use)
       vim.g.tokyonight_italic_functions = true
       vim.g.tokyonight_italic_variables = true
       vim.g.tokyonight_sidebars = { 'nerdtree', 'packer' }
-      -- vim.cmd "colorscheme tokyonight"
+      vim.cmd "colorscheme tokyonight"
 
     end
   }
