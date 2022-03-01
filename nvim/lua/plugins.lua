@@ -213,18 +213,37 @@ local f =  require'packer'.startup(function(use)
       end
 
       local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-      local servers = {
-        { name = 'clangd', settings = {}, },
-        { name = 'cmake', settings = {}, },
-        { name = 'pylsp', settings = {}, },
+
+      nvim_lsp.clangd.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = {'clangd-13'}
       }
-      for _, lsp in ipairs(servers) do
-        nvim_lsp[lsp.name].setup {
-          on_attach = on_attach,
-          capabilities = capabilities,
-          settings = lsp.settings,
+
+      nvim_lsp.cmake.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+      }
+
+      nvim_lsp.pylsp.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+      }
+
+      local home_dir = "/home/zach"
+      nvim_lsp.arduino_language_server.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = {
+          "arduino-language-server",
+          "-cli-config", home_dir .. "/.arduino15/arduno-cli.yaml",
+          "-cli", home_dir .. "/.local/bin/arduino-cli",
+          "-clangd", "/usr/bin/clangd-13",
+          "-format-conf-path", home_dir .. "/.clang-format",
+          "-fqbn", "arduino:samd:mkrwifi1010"
         }
-      end
+      }
+
       -- My rust-tools config & setup have to be here to allow me to reuse my on_attach easing_function
       -- Not ideal, but oh well
       local rust_tools_opts = {
