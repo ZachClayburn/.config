@@ -150,7 +150,9 @@ local f =  require'packer'.startup(function(use)
 
   use { 'lukas-reineke/indent-blankline.nvim',
     config = function()
-      vim.g.indentLine_char = '│'
+      require('indent_blankline').setup {
+        show_end_of_line = false,
+      }
       local map = require('map')
       local opts = { noremap=true, silent=true }
       map('n', 'zo', 'zo:IndentBlanklineRefresh<CR>', opts)
