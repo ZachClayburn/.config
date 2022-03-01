@@ -153,8 +153,9 @@ local f =  require'packer'.startup(function(use)
       vim.g.indentLine_char = '│'
       local map = require('map')
       local opts = { noremap=true, silent=true }
-      map('n', 'zo', 'zo:IndentBlanklineRefresh<CR>')
-      map('n', 'zO', 'zO:IndentBlanklineRefresh<CR>')
+      map('n', 'zo', 'zo:IndentBlanklineRefresh<CR>', opts)
+      map('n', 'zO', 'zO:IndentBlanklineRefresh<CR>', opts)
+      map('n', 'zi', 'zi:IndentBlanklineRefresh<CR>', opts)
     end
   }
 
