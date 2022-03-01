@@ -100,6 +100,7 @@ local f =  require'packer'.startup(function(use)
       vim.g.ale_linters = {
         rust = {'cargo'},
       }
+      vim.g.ale_disable_lsp = 1
     end
   }
 
