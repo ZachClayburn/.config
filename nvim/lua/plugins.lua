@@ -251,8 +251,23 @@ local f =  require'packer'.startup(function(use)
       -- Not ideal, but oh well
       local rust_tools_opts = {
         server = {
-          on_attach = on_attach
-        }
+          on_attach = on_attach,
+          -- settings = {
+          --   ["rust-analyzer"] = {
+          --     checkOnSave = {
+          --       allFeatures = true,
+          --       overrideCommand = {
+          --         "cargo",
+          --         "clippy",
+          --         "--workspace",
+          --         "--message-format=json",
+          --         "--all-targets",
+          --         "--all-features",
+          --       },
+          --     }
+          --   }
+          -- }
+        },
       }
       require('rust-tools').setup(rust_tools_opts)
     end
@@ -345,6 +360,14 @@ local f =  require'packer'.startup(function(use)
   }
 
   use 'junegunn/vim-easy-align'
+
+  use { 'abecodes/tabout.nvim',
+    config = function()
+      require('tabout').setup {}
+    end,
+    wants = { 'nvim-treesitter' },
+    after = { 'nvim-cmp' },
+  }
 
   use { 'simrat39/rust-tools.nvim',
     requires = {
