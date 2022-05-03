@@ -178,6 +178,7 @@ local f =  require'packer'.startup(function(use)
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'nvim-telescope/telescope.nvim' },
       { 'simrat39/rust-tools.nvim' },
+      { 'RRethy/vim-illuminate' },
     },
     config = function()
       local nvim_lsp = require('lspconfig')
