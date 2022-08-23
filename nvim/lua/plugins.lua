@@ -195,24 +195,23 @@ local f =  require'packer'.startup(function(use)
       }
 
       local on_attach = function(client, bufnr)
-        local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 
         vim.lsp.handlers["textDocument/hover"]= vim.lsp.with(vim.lsp.handlers.hover, {border = border})
         vim.lsp.handlers["textDocument/signatureHelp"]= vim.lsp.with(vim.lsp.handlers.signature_help, {border = border})
 
-        local opts = { noremap=true, silent=true }
+        local opts = { noremap=true, silent=true, buffer = bufnr }
         vim.cmd[[let mapleader=" "]]
-        buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-        buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-        buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        buf_set_keymap('n', '<leader>fr', [[<cmd>lua require('telescope.builtin').lsp_references()<CR>]], opts)
-        buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-        buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-        buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-        buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-        buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-        buf_set_keymap('n', '<leader>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+        vim.keymap.set('n', 'gD',         vim.lsp.buf.declaration,                                                 opts)
+        vim.keymap.set('n', 'gd',         vim.lsp.buf.definition,                                                  opts)
+        vim.keymap.set('n', 'K',          vim.lsp.buf.hover,                                                       opts)
+        vim.keymap.set('n', '<leader>fr', require('telescope.builtin').lsp_references,                             opts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename,                                                      opts)
+        vim.keymap.set('n', '<leader>e',  vim.diagnostic.open_float,                                               opts)
+        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder,                                        opts)
+        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder,                                     opts)
+        vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
+        vim.keymap.set('n', '<leader>f',  vim.lsp.buf.formatting,                                                  opts)
+        vim.keymap.set('n', '<leader>a',  vim.lsp.buf.code_action,                                                 opts)
         -- TODO Add more keymaps. Find keymaps with :h vim.lsp
       end
 
