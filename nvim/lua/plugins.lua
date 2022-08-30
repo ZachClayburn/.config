@@ -297,6 +297,8 @@ local f =  require'packer'.startup(function(use)
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-e>'] = cmp.mapping.close(),
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
+          ['<C-n>'] = cmp.mapping.select_next_item(),
+          ['<C-p>'] = cmp.mapping.select_prev_item(),
         },
         sources = cmp.config.sources({
             { name = 'nvim_lsp' },
@@ -306,8 +308,9 @@ local f =  require'packer'.startup(function(use)
             { name = 'crates' },
             { name = 'buffer' },
           }),
-        documentation = {
-          border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+        window = {
+          documentation = cmp.config.window.bordered(),
+          completion = cmp.config.window.bordered(),
         }
       }
     end
