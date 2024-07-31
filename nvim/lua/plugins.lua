@@ -166,6 +166,8 @@ local f =  require'packer'.startup(function(use)
 
   use { 'sheerun/vim-polyglot' }
 
+  use 'slint-ui/vim-slint'
+
   use { 'lukas-reineke/indent-blankline.nvim',
     config = function()
       require('indent_blankline').setup {
