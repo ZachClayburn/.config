@@ -170,6 +170,8 @@ local f =  require'packer'.startup(function(use)
 
   use { 'lukas-reineke/indent-blankline.nvim',
     config = function()
+      require("ibl").setup()
+      --[[ Old v2 configuration
       require('indent_blankline').setup {
         show_end_of_line = false,
       }
@@ -178,6 +180,7 @@ local f =  require'packer'.startup(function(use)
       map('n', 'zo', 'zo:IndentBlanklineRefresh<CR>', opts)
       map('n', 'zO', 'zO:IndentBlanklineRefresh<CR>', opts)
       map('n', 'zi', 'zi:IndentBlanklineRefresh<CR>', opts)
+    ]]
     end
   }
 
