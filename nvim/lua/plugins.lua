@@ -89,7 +89,7 @@ local f =  require'packer'.startup(function(use)
   }
 
   use { 'NTBBloodbath/galaxyline.nvim',
-    requires = { "kyazdani42/nvim-web-devicons", opt = true },
+    requires = { "kyazdani42/nvim-web-devicons" },
     config = function()
       require'galaxyline.themes.eviline'
     end,
