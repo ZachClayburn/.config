@@ -189,10 +189,12 @@ local f =  require'packer'.startup(function(use)
     config = function()
       require'nvim-treesitter.configs'.setup {
         ensure_installed = "all",
-        highlight = { enabled = vim.g.vscode == nil },
-        incremental_selection = { enabled = true },
-        indent = { enabled = true }
+        highlight = { enable = true },
+        incremental_selection = { enable = false },
+        indent = { enable = true }
       }
+      vim.api.nvim_set_option_value('foldmethod', 'expr', {})
+      vim.api.nvim_set_option_value('foldexpr', 'nvim_treesitter#foldexpr()', {})
     end
   }
 
