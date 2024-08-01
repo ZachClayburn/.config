@@ -6,4 +6,5 @@
 !.gitignore
 !gh/
 !lsd/
+!starship.toml
 
