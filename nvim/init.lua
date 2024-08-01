@@ -1,7 +1,10 @@
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
-require'plugins'
+g.mapleader = " "
+g.maplocalleader = "\\"
 
 local opt = require('opt')
 
@@ -23,6 +26,7 @@ opt('g', 'wrap', false)
 opt('g', 'undofile', true)
 opt('g', 'ignorecase', true)
 opt('g', 'smartcase', true)
+require("config.lazy")
 
 local map = require('map')
 cmd[[let mapleader=" "]]
@@ -41,13 +45,6 @@ map('t',  '<A-k>', '<C-\\><C-N><C-w>k')
 map('t',  '<A-l>', '<C-\\><C-N><C-w>l')
 
 g.python3_host_prog = '/usr/bin/python3'
-
-cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-  augroup end
-]])
 
 -- gui/neovide settings
 opt('g', 'guifont', 'JetBrainsMono Nerd Font' )

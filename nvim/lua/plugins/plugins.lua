@@ -1,16 +1,8 @@
--- Bootstrap Packer
-local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
-end
-
 -- Add plugins
-local f =  require'packer'.startup(function(use)
-  use 'wbthomason/packer.nvim'
-
-  use { 'lewis6991/gitsigns.nvim',
-    requires = {
+local f = {
+  {
+    'lewis6991/gitsigns.nvim',
+    dependencies = {
       'nvim-lua/plenary.nvim'
     },
     config = function()
@@ -70,9 +62,9 @@ local f =  require'packer'.startup(function(use)
         status_formatter = nil, -- Use default
       }
     end
-  }
-
-  use { 'preservim/nerdcommenter',
+  },
+  {
+    'preservim/nerdcommenter',
     config = function()
       vim.g.NERDCompactSexyComs = true
       vim.g.NERDSpaceDelims = true
@@ -80,29 +72,28 @@ local f =  require'packer'.startup(function(use)
       vim.g.NERDDefaultAlign = 'left'
       vim.g.NERDTrimTrailingWhitespace = true
     end
-  }
-
-  use { 'windwp/nvim-autopairs',
+  },
+  {
+    'windwp/nvim-autopairs',
     config = function()
       require('nvim-autopairs').setup{}
     end
-  }
-
-  use { 'NTBBloodbath/galaxyline.nvim',
-    requires = { "kyazdani42/nvim-web-devicons" },
+  },
+  {
+    'NTBBloodbath/galaxyline.nvim',
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require'galaxyline.themes.eviline'
     end,
-  }
+  },
 
-  use { 'alvarosevilla95/luatab.nvim',
-    requires = {'kyazdani42/nvim-web-devicons'},
+  { 'alvarosevilla95/luatab.nvim',
+    dependencies = {'nvim-tree/nvim-web-devicons'},
     config = function()
       require('luatab').setup({})
     end
-  }
-
-  use { 'dense-analysis/ale',
+  },
+  { 'dense-analysis/ale',
     -- setup = function()
     --   -- Called before plugin loaded
     -- end,
@@ -120,10 +111,9 @@ local f =  require'packer'.startup(function(use)
       }
       vim.g.ale_disable_lsp = 1
     end
-  }
-
-  use { 'preservim/nerdtree',
-    requires = {
+  },
+  { 'preservim/nerdtree',
+    dependencies = {
       {'ryanoasis/vim-devicons'},
       {'Xuyuanp/nerdtree-git-plugin'}
     },
@@ -152,23 +142,15 @@ local f =  require'packer'.startup(function(use)
           \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
       ]])
     end
-  }
-
-  use { 'tpope/vim-fugitive' }
-
-  use { 'tpope/vim-git' }
-
-  use 'tpope/vim-sensible'
-
-  use 'tpope/vim-surround'
-
-  use { 'jeffkreeftmeijer/vim-numbertoggle' }
-
-  use { 'sheerun/vim-polyglot' }
-
-  use 'slint-ui/vim-slint'
-
-  use { 'lukas-reineke/indent-blankline.nvim',
+  },
+  { 'tpope/vim-fugitive' },
+  { 'tpope/vim-git' },
+  { 'tpope/vim-sensible' },
+  { 'tpope/vim-surround' },
+  { 'jeffkreeftmeijer/vim-numbertoggle' },
+  { 'sheerun/vim-polyglot' },
+  {
+    'lukas-reineke/indent-blankline.nvim',
     config = function()
       require("ibl").setup()
       --[[ Old v2 configuration
@@ -182,13 +164,47 @@ local f =  require'packer'.startup(function(use)
       map('n', 'zi', 'zi:IndentBlanklineRefresh<CR>', opts)
     ]]
     end
-  }
-
-  use { 'nvim-treesitter/nvim-treesitter',
+  },
+  {
+    'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
       require'nvim-treesitter.configs'.setup {
-        ensure_installed = "all",
+        ensure_installed = {
+          "bash",
+          "c",
+          "cmake",
+          "comment",
+          "cpp",
+          "csv",
+          "diff",
+          "gdscript",
+          "gdshader",
+          "godot_resource",
+          "json",
+          "json5",
+          "just",
+          "llvm",
+          "lua",
+          "make",
+          "markdown",
+          "markdown_inline",
+          "ninja",
+          "python",
+          "query",
+          "rst",
+          "rust",
+          "sql",
+          "ssh_config",
+          "toml",
+          "tsv",
+          "vim",
+          "vimdoc",
+          "wgsl",
+          "wgsl_bevy",
+          "xml",
+          "yaml"
+        },
         highlight = { enable = true },
         incremental_selection = { enable = false },
         indent = { enable = true }
@@ -196,14 +212,15 @@ local f =  require'packer'.startup(function(use)
       vim.api.nvim_set_option_value('foldmethod', 'expr', {})
       vim.api.nvim_set_option_value('foldexpr', 'nvim_treesitter#foldexpr()', {})
     end
-  }
-
-  use { 'neovim/nvim-lspconfig',
-    requires = {
+  },
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'nvim-telescope/telescope.nvim' },
       { 'simrat39/rust-tools.nvim' },
       { 'RRethy/vim-illuminate' },
+      { 'slint-ui/vim-slint' },
     },
     config = function()
       local nvim_lsp = require('lspconfig')
@@ -316,10 +333,10 @@ local f =  require'packer'.startup(function(use)
       }
       rt.setup(rust_tools_opts)
     end
-  }
-
-  use { 'hrsh7th/nvim-cmp',
-    requires = {
+  },
+  {
+    'hrsh7th/nvim-cmp',
+    dependencies = {
       { 'hrsh7th/vim-vsnip' },
       { 'hrsh7th/cmp-vsnip' },
       { 'hrsh7th/cmp-nvim-lsp' },
@@ -359,10 +376,10 @@ local f =  require'packer'.startup(function(use)
         }
       }
     end
-  }
-
-  use { 'nvim-telescope/telescope.nvim',
-    requires = {
+  },
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = {
       {'nvim-lua/popup.nvim'},
       {'nvim-lua/plenary.nvim'},
       {'nvim-telescope/telescope-project.nvim'}
@@ -380,9 +397,9 @@ local f =  require'packer'.startup(function(use)
       telescope.load_extension('project')
       map('n', '<Leader>fp', [[<cmd>lua require'telescope'.extensions.project.project{}<cr>]], mapOpts)
     end
-  }
-
-  use { 'karb94/neoscroll.nvim',
+  },
+  {
+    'karb94/neoscroll.nvim',
     config = function()
       require('neoscroll').setup{
         mappings = {},
@@ -405,20 +422,13 @@ local f =  require'packer'.startup(function(use)
       mappings['zb'] = {'zb', {'250'}}
       require('neoscroll.config').set_mappings(mappings)
     end
-  }
-
-  use 'junegunn/vim-easy-align'
-
-  -- use { 'abecodes/tabout.nvim',
-  --   config = function()
-  --     require('tabout').setup {}
-  --   end,
-  --   wants = { 'nvim-treesitter' },
-  --   after = { 'nvim-cmp' },
-  -- }
-  --
-  use { 'simrat39/rust-tools.nvim',
-    requires = {
+  },
+  {
+    'junegunn/vim-easy-align'
+  },
+  {
+    'simrat39/rust-tools.nvim',
+    dependencies = {
       {'neovim/nvim-lspconfig'},
       {'nvim-lua/popup.nvim'},
       {'nvim-lua/plenary.nvim'},
@@ -427,16 +437,15 @@ local f =  require'packer'.startup(function(use)
     },
     config = function()
     end
-  }
-
-  use { 'Saecki/crates.nvim',
-    requires = {
+  },
+  {
+    'Saecki/crates.nvim',
+    dependencies = {
       { 'nvim-lua/plenary.nvim' },
     }
-  }
-
-  -- Color schemes
-  use { 'folke/tokyonight.nvim',
+  },
+  {
+    'folke/tokyonight.nvim',
     config = function()
       vim.g.tokyonight_style = 'storm'
       vim.g.tokyonight_italic_functions = true
@@ -445,9 +454,9 @@ local f =  require'packer'.startup(function(use)
       vim.cmd "colorscheme tokyonight"
 
     end
-  }
-
-  use { 'rafamadriz/neon',
+  },
+  {
+    'rafamadriz/neon',
     config = function()
       -- Supports lualine
       vim.g.neon_style = 'default'
@@ -459,20 +468,19 @@ local f =  require'packer'.startup(function(use)
       vim.g.neon_bold = true
       vim.g.neon_transparent = false
     end
-  }
-
-  use { 'bluz71/vim-nightfly-guicolors',
+  },
+  {
+    'bluz71/vim-nightfly-guicolors',
     config = function()
       -- supports lightline, vim-airline, lualine & vim-moonfly-statusline
       -- has an alacritty theme
       vim.g.nightflyCursorColor = 1
     end
-  }
-
-  use { 'nxvu699134/vn-night.nvim'
+  },
+  {
+    'nxvu699134/vn-night.nvim'
     -- supports galaxyline
   }
 
-end)
-
+}
 return f
