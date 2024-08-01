@@ -219,33 +219,46 @@ local f =  require'packer'.startup(function(use)
         {"│", "FloatBorder"},
       }
 
-      local on_attach = function(client, bufnr)
+      local rt = require('rust-tools')
 
-        vim.lsp.handlers["textDocument/hover"]= vim.lsp.with(vim.lsp.handlers.hover, {border = border})
-        vim.lsp.handlers["textDocument/signatureHelp"]= vim.lsp.with(vim.lsp.handlers.signature_help, {border = border})
+      local on_attach = function(client, bufnr)
 
         local opts = { noremap=true, silent=true, buffer = bufnr }
         vim.cmd[[let mapleader=" "]]
-        vim.keymap.set('n', 'gD',         vim.lsp.buf.declaration,                                                 opts)
-        vim.keymap.set('n', 'gd',         vim.lsp.buf.definition,                                                  opts)
-        vim.keymap.set('n', 'K',          vim.lsp.buf.hover,                                                       opts)
-        vim.keymap.set('n', '<leader>fr', require('telescope.builtin').lsp_references,                             opts)
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename,                                                      opts)
-        vim.keymap.set('n', '<leader>e',  vim.diagnostic.open_float,                                               opts)
-        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder,                                        opts)
-        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder,                                     opts)
-        vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
-        vim.keymap.set('n', '<leader>f',  vim.lsp.buf.formatting,                                                  opts)
-        vim.keymap.set('n', '<leader>a',  vim.lsp.buf.code_action,                                                 opts)
+        if client.name == "rust_analyzer" then
+          vim.keymap.set('n', 'K', rt.hover_actions.hover_actions, opts)
+          vim.keymap.set('n', 'J', rt.join_lines.join_lines, opts)
+        else
+          vim.lsp.handlers["textDocument/hover"]= vim.lsp.with(vim.lsp.handlers.hover, {border = border})
+          vim.lsp.handlers["textDocument/signatureHelp"]= vim.lsp.with(vim.lsp.handlers.signature_help, {border = border})
+          vim.keymap.set('n', 'K',          vim.lsp.buf.hover,                           opts)
+        end
+        local list_workspace_folders = function()
+          print(vim.inspect(vim.lsp.buf.list_workspace_folders())) 
+        end
+        vim.keymap.set('n', '<leader>wl', list_workspace_folders, opts)
+        vim.keymap.set('n', 'gD',         vim.lsp.buf.declaration,                     opts)
+        vim.keymap.set('n', 'gd',         vim.lsp.buf.definition,                      opts)
+        vim.keymap.set('n', '<leader>fr', require('telescope.builtin').lsp_references, opts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename,                          opts)
+        vim.keymap.set('n', '<leader>e',  vim.diagnostic.open_float,                   opts)
+        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder,            opts)
+        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder,         opts)
+        vim.keymap.set('n', '<leader>f',  vim.lsp.buf.formatting,                      opts)
+        vim.keymap.set('n', '<leader>a',  vim.lsp.buf.code_action,                     opts)
         -- TODO Add more keymaps. Find keymaps with :h vim.lsp
+
+        -- require 'illuminate'.on_attach(client)
       end
 
-      local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       nvim_lsp.clangd.setup {
         on_attach = on_attach,
         capabilities = capabilities,
-        cmd = {'clangd-13'}
+        single_file_support = false,
+        cmd = {'clangd-15'},
+        filetypes = { 'cpp', 'c' },
       }
 
       nvim_lsp.cmake.setup {
@@ -256,6 +269,15 @@ local f =  require'packer'.startup(function(use)
       nvim_lsp.pylsp.setup {
         on_attach = on_attach,
         capabilities = capabilities,
+        settings = {
+          pylsp = {
+            plugins = {
+              pycodestyle = {
+                maxLineLength = 120
+              }
+            }
+          }
+        },
       }
 
       local home_dir = "/home/zach"
@@ -266,10 +288,15 @@ local f =  require'packer'.startup(function(use)
           "arduino-language-server",
           "-cli-config", home_dir .. "/.arduino15/arduno-cli.yaml",
           "-cli", home_dir .. "/.local/bin/arduino-cli",
-          "-clangd", "/usr/bin/clangd-13",
+          "-clangd", "/usr/bin/clangd",
           "-format-conf-path", home_dir .. "/.clang-format",
           "-fqbn", "arduino:samd:mkrwifi1010"
         }
+      }
+
+      nvim_lsp.slint_lsp.setup {
+        on_attach = on_attach,
+        capabilities = capabilities
       }
 
       -- My rust-tools config & setup have to be here to allow me to reuse my on_attach easing_function
@@ -277,24 +304,17 @@ local f =  require'packer'.startup(function(use)
       local rust_tools_opts = {
         server = {
           on_attach = on_attach,
+          capabilities = capabilities,
           -- settings = {
           --   ["rust-analyzer"] = {
-          --     checkOnSave = {
-          --       allFeatures = true,
-          --       overrideCommand = {
-          --         "cargo",
-          --         "clippy",
-          --         "--workspace",
-          --         "--message-format=json",
-          --         "--all-targets",
-          --         "--all-features",
-          --       },
+          --     fmt = {
+          --       overrideCommand = "cargo +nightly fmt"
           --     }
           --   }
           -- }
         },
       }
-      require('rust-tools').setup(rust_tools_opts)
+      rt.setup(rust_tools_opts)
     end
   }
 
