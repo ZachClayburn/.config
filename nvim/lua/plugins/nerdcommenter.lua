@@ -7,4 +7,4 @@ return {
     vim.g.NERDDefaultAlign = 'left'
     vim.g.NERDTrimTrailingWhitespace = true
   end
-},
+}
