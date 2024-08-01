@@ -409,14 +409,14 @@ local f =  require'packer'.startup(function(use)
 
   use 'junegunn/vim-easy-align'
 
-  use { 'abecodes/tabout.nvim',
-    config = function()
-      require('tabout').setup {}
-    end,
-    wants = { 'nvim-treesitter' },
-    after = { 'nvim-cmp' },
-  }
-
+  -- use { 'abecodes/tabout.nvim',
+  --   config = function()
+  --     require('tabout').setup {}
+  --   end,
+  --   wants = { 'nvim-treesitter' },
+  --   after = { 'nvim-cmp' },
+  -- }
+  --
   use { 'simrat39/rust-tools.nvim',
     requires = {
       {'neovim/nvim-lspconfig'},
