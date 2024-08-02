@@ -5,7 +5,6 @@ local f = {
   { 'tpope/vim-sensible' },
   { 'tpope/vim-surround' },
   { 'jeffkreeftmeijer/vim-numbertoggle' },
-  { 'sheerun/vim-polyglot' },
   { 'junegunn/vim-easy-align' },
 
 }
